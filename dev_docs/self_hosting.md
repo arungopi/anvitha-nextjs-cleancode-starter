@@ -1,0 +1,1 @@
+1. [Self hosting Next.js app](https://nextjs.org/docs/app/guides/self-hosting#middleware)

@@ -1,0 +1,1 @@
+1. High Order Component Pattern components

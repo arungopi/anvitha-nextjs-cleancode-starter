@@ -1,0 +1,1 @@
+console.log("package info : Repository Interfaces (Gateways)");

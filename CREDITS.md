@@ -1,0 +1,3 @@
+1. logo.png : <a href="https://www.flaticon.com/free-icons/data-server" title="data server icons">Data server icons created by itim2101 - Flaticon</a>  
+2. logo.png : <a href="https://www.flaticon.com/free-icons/data-server" title="data server icons">Data server icons created by itim2101 - Flaticon</a>  
+3. logo.png : <a href="https://www.flaticon.com/free-icons/proxy" title="proxy icons">Proxy icons created by Design View - Flaticon</a>

@@ -1,0 +1,2 @@
+console.log("package name : src/lib");
+console.log("package info : Use src/lib/ for generic, reusable, and pure functions. Only use layer-specific folders if the utility is tightly coupled to that layer's technology or responsibility.");

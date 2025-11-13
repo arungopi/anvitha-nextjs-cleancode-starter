@@ -1,0 +1,1 @@
+console.log("package info : For outgoing responses (e.g., mapping Domain Entities to ViewModels)")
