@@ -1,5 +1,5 @@
 ## Anvitha Next.js Clean code starter
-This is a [Next.js](https://nextjs.org) project bootstrapped with `npx create-nextjs-app@15`
+The framework for building scalable, maintainable, and composition-focused React applications.This is a [Next.js](https://nextjs.org) project bootstrapped with `npx create-nextjs-app@15`
 ## Getting Started
 
 First, run the development server:
