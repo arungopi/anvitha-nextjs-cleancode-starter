@@ -1,4 +1,4 @@
-## Anvitha Next.js Clean code starter
+## Anvitha (अन्वित) Next.js Clean code starter
 This is a [Next.js](https://nextjs.org) project bootstrapped with `npx create-nextjs-app@15`
 ## Getting Started
 
