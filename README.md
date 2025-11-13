@@ -1,5 +1,5 @@
-## Vantagegrid
-Vantagegrid is a dataplatform for Data Center.This is a [Next.js](https://nextjs.org) project bootstrapped with `npx create-nextjs-app@15`
+## Anvitha Next.js Clean code starter
+This is a [Next.js](https://nextjs.org) project bootstrapped with `npx create-nextjs-app@15`
 ## Getting Started
 
 First, run the development server:
