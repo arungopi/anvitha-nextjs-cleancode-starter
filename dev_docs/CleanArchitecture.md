@@ -117,3 +117,6 @@ This is the Next.js App Router structure. Its sole job is to translate user inpu
       return NextResponse.json(newUser, { status: 201 });
     }
     ```
+
+    ## References
+    [1] [Clean Architecture by Example in 5 Minutes](https://www.youtube.com/watch?v=xuFpizWxDs0)
