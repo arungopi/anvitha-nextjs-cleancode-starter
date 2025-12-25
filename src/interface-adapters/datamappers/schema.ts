@@ -8,8 +8,15 @@
 import { z } from "zod";
 
 const schema = z.object({
-  email: z.string().email(),
-  password: z.string().min(1),
+  email: z.string().email().nonempty("Email is required"),
+  password: z.string().min(1, "Password is required"),
+  role: z.string().transform((value) => {
+      const num = Number(value); // Convert string to number
+      if (isNaN(num)) {
+        throw new Error("Role must be a valid number"); 
+      }
+      return num; 
+    }),
 });
 
 type Schema = z.infer<typeof schema>;
