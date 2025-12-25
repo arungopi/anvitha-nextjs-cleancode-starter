@@ -18,12 +18,14 @@ import { schema } from "@/interface-adapters/datamappers/schema";
 import { ConsoleLogger } from "@/infrastructure/services/ConsoleLogger";
 import { UserRepository } from "@/infrastructure/repositories/UserRepository";
 import { AuthService } from "@/infrastructure/services/AuthService";
+import { AuthorizationController } from "../controllers/AuthorizationController";
 // Your own logic for dealing with plaintext password strings; be careful!
 //import { hashPassword, verifyPassword } from "@/app/utils/password";
 
 import { ZodError } from "zod";
 
 const consoleLogger = new ConsoleLogger();
+const authorizationController = new AuthorizationController();
 
 export default {
      providers: [GitHub,
@@ -31,8 +33,9 @@ export default {
       // You can specify which fields should be submitted, by adding keys to the `credentials` object.
       // e.g. domain, username, password, 2FA token, etc.
       credentials: {
-        email: { label: "Email", type: "email" },
-        password: { label: "Password", type: "password" },
+        email: { label: "Email", type: "email", required: true},
+        password: { label: "Password", type: "password", required: true},
+        role: {label: "Role", type: "text", required: true},
       },
       async authorize(credentials): Promise<User | null> {
         
@@ -42,25 +45,31 @@ export default {
           const authService = new AuthService(userRepository);
          
           const matchedUser = await authService.validateUserByEmail(validatedCredentials.email);
-                    
+                   
           if(matchedUser == null){
             consoleLogger.error("User not found")
             throw new Error("User not found.");
           }
-           
+          
           const authStatus = await authService.validatePassword(validatedCredentials.password, matchedUser.password as string)
           
           if (!authStatus) {
-            consoleLogger.error("Invalid credentials")
+            consoleLogger.debug("Invalid credentials")
             // No user found, so this is their first attempt to login
             // Optionally, this is also the place you could do a user registration
             throw new Error("Invalid credentials.");
           }
 
+          if(!await authorizationController.userRoleExists(matchedUser.id, validatedCredentials.role)){
+            consoleLogger.debug("Invalid credentials: Role does not exist");
+            throw new Error("Invalid credentials: User doesn't have this role");
+          }
+
           const user = {
             id: matchedUser.id,
             email: matchedUser.email,
-            image: matchedUser.image
+            image: matchedUser.image,
+            role : validatedCredentials.role,
           }
 
           consoleLogger.debug("User logged in : ", user)

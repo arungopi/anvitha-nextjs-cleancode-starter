@@ -12,7 +12,7 @@
 
 import NextAuth from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import prisma from "@/infrastructure/prisma/client";
+import {prisma} from "@/infrastructure/prisma/client";
 import authConfig from "./auth.config"
 
 
@@ -36,6 +36,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async session({ session, token }) { // <--- ADD THIS SESSION CALLBACK
       if (token.id) {
         session.user.id = token.id as string; // Assign id from token to session.user
+        session.user.role = token.role; // custom role support - refer:next-auth.d.ts
       }
       
       return session;
@@ -44,6 +45,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (account?.provider === "credentials") {
         token.credentials = true;
         token.id = user?.id; // Add user ID to the token
+        token.role = user?.role; // custom role support - refer:next-auth.d.ts
       }
       return token;
     },
