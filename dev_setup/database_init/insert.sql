@@ -1,0 +1,2 @@
+INSERT INTO "Role" (name, description, "createdAt","updatedAt") VALUES ('User', 'General User', now(),now())
+INSERT INTO "Role" (name, description, "createdAt","updatedAt") VALUES ('Admin', 'Administrator', now(),now()) 
