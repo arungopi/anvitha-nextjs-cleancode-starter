@@ -20,9 +20,12 @@ import Link from 'next/link';*/
 
 import AuthenticationCheck from '@/interface-adapters/auth/AuthenticationCheck';
 import Dashboard from '../components/Dashboard';
+//import { auth } from '@/interface-adapters/auth/auth';
 
 async function Home() {
   
+  //const session = await auth(); 
+  //console.log("SESSION",session);
   await AuthenticationCheck.ensureLogin();
 
   return (
