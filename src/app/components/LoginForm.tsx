@@ -20,7 +20,7 @@ import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { sha256 } from "js-sha256";
 import Button from '@mui/material/Button';
-import { TextField, Container, Box, Typography, ButtonGroup, Divider, Link } from '@mui/material';
+import { TextField, Container, Box, Typography, ButtonGroup, Divider, Link, FormControl, Select, InputLabel, MenuItem, SelectChangeEvent, FormHelperText } from '@mui/material';
 import LoginButton from "@/app/components/ui/buttons/LoginButton";
 
 type Providers = Awaited<ReturnType<typeof getProviders>>;
@@ -32,23 +32,39 @@ const renderLoginButtons = (providers: Providers | null) => {
         .map((provider) => <LoginButton auth={provider} key={provider.id} />) : null;
 }
 
-const handleSubmitForm = (data: { email: string, password: string }) => {
+const handleSubmitForm = (data: { email: string, password: string, role: string }) => {
+
     signIn("credentials", {
         email: data.email,
-        password: sha256(data.password)
+        password: sha256(data.password),
+        role: data.role
     }); // redirected to dashboard after signin
 }
 
 type LoginFormProps = {
     email: string,
-    password: string
+    password: string,
+    role: string,
 }
 
+//const roles = [{ id: 0, name: 'Admin' }, { id: 1, name: 'User' }]
+
 export default function LoginForm() {
-    
+
     const [providers, setProviders] = useState<Providers | null>(null);
     const [appName, setAppName] = useState<string>();
     const [appDesc, setAppDesc] = useState<string>();
+    const [role, setRole] = useState<string>('1');
+    // roles is for loading the listing
+    const [roles, setRoles] = useState<{
+        id: number, name: string, description: string,
+        createdAt: string, updatedAt: string
+    }[]>([]);
+    const [error, setError] = useState<string | null>(null);
+
+    const handleDataTypeChange = (event: SelectChangeEvent) => {
+        setRole(event.target.value);
+    };
     const {
         register,
         handleSubmit,
@@ -58,7 +74,8 @@ export default function LoginForm() {
         reValidateMode: "onChange",
         defaultValues: {
             email: "",
-            password: ""
+            password: "",
+            role: role,
         }
     }
     );
@@ -70,8 +87,33 @@ export default function LoginForm() {
             const providers = await getProviders();
             setProviders(providers);
         }
+
+        async function fetchRoles() {
+            try {
+                const response = await fetch('/api/auth/role');
+                if (!response.ok) {
+                    throw new Error("Failed to fetch roles");
+                }
+                const payload = await response.json();
+                setRoles(payload.data);
+
+            } catch (error) {
+                if (error instanceof Error) {
+                    setError(error.message);
+                } else {
+                    setError("Unknown error occured");
+                }
+            }
+        }
+
         fetchProviders();
+        fetchRoles();
     }, []);
+
+    if (error) {
+        return <div>Error: {error}</div>;
+    }
+
     return (
         <Box
             sx={{
@@ -154,6 +196,25 @@ export default function LoginForm() {
                             />
 
                         </div>
+                        {/* Dropdown Selection */}
+                        {roles ? <FormControl fullWidth required>
+                            <InputLabel id="role-label">Role</InputLabel>
+                            <Select
+                                labelId="role-label"
+                                id="role"
+                                label="Role" // Corresponds to InputLabel text
+                                value={role}
+                                {...register("role", { required: "Role is required" })}
+                                onChange={handleDataTypeChange}
+                                error={!!errors.password}
+                            >
+                                {roles.map((option) => (
+                                    <MenuItem key={option.id} value={option.id} disabled={option.name === ''}>
+                                        {option.name}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl> : <p>Loading..</p>}
                     </Box>
                     <Button variant="contained" type="submit">Sign In</Button>
                     <Typography variant="body2" sx={{ mt: 2 }}>
