@@ -14,32 +14,19 @@
 'use server'
 
 import db from "@/infrastructure/prisma/client";
-import { schema } from "@/interface-adapters/datamappers/schema";
 import { executeAction } from "@/app/lib/executeAction";
-import { sha256 } from "js-sha256";
-import { hashPassword } from "@/infrastructure/utils/password";
+
+
+import { AuthController } from "@/interface-adapters/controllers/AuthController";
 
 export default async function signUpAction(formData: FormData) {
   await executeAction({
     actionFn: async () => {
-      const email = formData.get('email');
-      const password = formData.get('password');
-      const rPassword = formData.get('rpassword')
-      if (password != rPassword) {
-        throw new Error("Retyped password missmatch")
-      }
-      const validatedCredentials = schema.parse({ email, password });
-      const pwHash = await hashPassword(sha256(validatedCredentials.password))
-      
-      const user = await db.user.create({
-        data: {
-          email: validatedCredentials.email.toLocaleLowerCase(),
-          password: pwHash
-        }
-      })
-
-      console.log(user)
-
+      const email = formData.get('email')?.toString();
+      const password = formData.get('password')?.toString();
+      const rPassword = formData.get('rpassword')?.toString();
+      const authController = new AuthController();
+      authController.signUp(email, password, rPassword);
     },
     successMessage: "Signed up successfully"
   });
