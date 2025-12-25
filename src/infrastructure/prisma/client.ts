@@ -8,12 +8,15 @@
  * Date: 2025-04-17
  */
 
-import { PrismaClient } from "@prisma/client"
+import { PrismaClient, Prisma } from "@prisma/client"
  
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient }
 
 const prisma = globalForPrisma.prisma || new PrismaClient()
 
-export default prisma;
+// Store the Prisma instance globally in development mode
+if (process.env.NODE_ENV !== "production") {
+    globalForPrisma.prisma = prisma;
+}
 
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma
+export {prisma, Prisma};
