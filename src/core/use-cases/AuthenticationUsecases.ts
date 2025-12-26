@@ -40,8 +40,8 @@ export class AuthenticationUsecases {
      * @param password 
      */
     async signUp(email: string, password: string): Promise<User | null> {
-        const isEmailValid: boolean = await this.authService.validateUserByEmail(email);
-        if (isEmailValid) {
+        const user = await this.authService.validateUserByEmail(email);
+        if (user == null) {
             try {
                 const user = await this.authService.signUp(email, password);
                 return user;
