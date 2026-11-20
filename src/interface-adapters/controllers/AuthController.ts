@@ -14,7 +14,7 @@
 import { AuthenticationUsecases } from "@/core/use-cases/AuthenticationUsecases";
 import { AuthService } from "@/infrastructure/services/AuthService";
 import { UserRepository } from "@/infrastructure/repositories/UserRepository";
-import { schema } from "@/interface-adapters/datamappers/schema";
+import { schema } from "@/interface-adapters/datamappers/SignupValidation";
 
 export class AuthController{
 
